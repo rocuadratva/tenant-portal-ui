@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Profile — Tenant Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+
+  <!-- ── Navbar ─────────────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+
+        <a href="dashboard.html" class="navbar__brand">
+          <div class="navbar__brand-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          Tenant<span>Portal</span>
+        </a>
+
+        <button class="navbar__menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+
+        <div class="navbar__nav">
+          <a href="documents.html" class="nav-link">Documents</a>
+          <a href="maintenance.html" class="nav-link">Maintenance</a>
+          <a href="contact.html" class="nav-link">Contact</a>
+          <button class="btn btn--ghost btn--sm" data-logout>Log out</button>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Main ───────────────────────────────────────────────── -->
+  <main class="page-content">
+    <div class="container container--lg">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div class="page-header__text">
+          <h1 class="page-header__title">Complete Your Profile</h1>
+          <p class="page-header__subtitle">This sets up your tenant account. It only takes a few minutes.</p>
+        </div>
+      </div>
+
+      <!-- Progress steps -->
+      <div class="progress-steps" role="list" aria-label="Onboarding steps">
+        <div class="step" role="listitem">
+          <div class="step__dot">1</div>
+          <div class="step__label">Personal</div>
+        </div>
+        <div class="step" role="listitem">
+          <div class="step__dot">2</div>
+          <div class="step__label">Lease</div>
+        </div>
+        <div class="step" role="listitem">
+          <div class="step__dot">3</div>
+          <div class="step__label">ID &amp; Submit</div>
+        </div>
+      </div>
+
+      <div class="card card--padded card--raised">
+
+        <!-- ── Step 1 · Personal & Emergency ───────────────── -->
+        <div class="step-panel">
+
+          <div class="section-step mb-6">
+            <div class="section-step__num">1</div>
+            <div class="section-step__label">Personal &amp; Emergency Info</div>
+          </div>
+
+          <div class="form-group">
+            <label for="full-name" class="label-required">Full Name</label>
+            <input type="text" id="full-name" name="Full Name"
+              placeholder="e.g. Juan dela Cruz"
+              autocomplete="name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="label-required">Email Address</label>
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </span>
+              <input type="email" id="email" name="Email"
+                placeholder="you@email.com"
+                autocomplete="email" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="label-required">Phone Number</label>
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.49A2 2 0 0 1 3.6 1.31h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9c1.27 2.19 2.82 3.74 5 5l1.27-.89a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/>
+                </svg>
+              </span>
+              <input type="tel" id="phone" name="Phone"
+                placeholder="+63 9XX XXX XXXX"
+                autocomplete="tel" required>
+            </div>
+          </div>
+
+          <div class="divider mt-8 mb-6"></div>
+
+          <div class="form-group">
+            <label for="ec-name" class="label-required">Emergency Contact Name</label>
+            <input type="text" id="ec-name" name="Emergency Contact Name"
+              placeholder="Full name of your emergency contact"
+              autocomplete="off" required>
+          </div>
+
+          <div class="form-group">
+            <label for="ec-number" class="label-required">Emergency Contact Number</label>
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.49A2 2 0 0 1 3.6 1.31h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9c1.27 2.19 2.82 3.74 5 5l1.27-.89a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/>
+                </svg>
+              </span>
+              <input type="tel" id="ec-number" name="Emergency Contact Number"
+                placeholder="+63 9XX XXX XXXX"
+                autocomplete="off" required>
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-8">
+            <div></div>
+            <button type="button" id="next-1" class="btn btn--primary">
+              Next
+              <span class="btn__arrow">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div id="alert-1" class="mt-4"></div>
+
+        </div>
+
+        <!-- ── Step 2 · Unit & Lease ────────────────────────── -->
+        <div class="step-panel" hidden>
+
+          <div class="section-step mb-6">
+            <div class="section-step__num">2</div>
+            <div class="section-step__label">Unit &amp; Lease Details</div>
+          </div>
+
+          <div class="form-group">
+            <label for="unit-number" class="label-required">Unit Number</label>
+            <input type="text" id="unit-number" name="Unit Number"
+              placeholder="e.g. 2A or Room 4"
+              autocomplete="off" required>
+          </div>
+
+          <div class="form-row mt-6">
+            <div class="form-group" style="margin-top:0">
+              <label for="lease-start" class="label-required">Lease Start Date</label>
+              <input type="date" id="lease-start" name="Lease Start Date" required>
+            </div>
+            <div class="form-group" style="margin-top:0">
+              <label for="lease-end" class="label-required">Lease End Date</label>
+              <input type="date" id="lease-end" name="Lease End Date" required>
+            </div>
+          </div>
+
+          <div class="form-row mt-6">
+            <div class="form-group" style="margin-top:0">
+              <label for="monthly-rent" class="label-required">Monthly Rent (₱)</label>
+              <input type="number" id="monthly-rent" name="Monthly Rent"
+                placeholder="e.g. 8000" min="0" step="1" required>
+            </div>
+            <div class="form-group" style="margin-top:0">
+              <label for="security-deposit" class="label-required">Security Deposit (₱)</label>
+              <input type="number" id="security-deposit" name="Security Deposit"
+                placeholder="e.g. 16000" min="0" step="1" required>
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-8">
+            <button type="button" id="back-2" class="btn btn--ghost">Back</button>
+            <button type="button" id="next-2" class="btn btn--primary">
+              Next
+              <span class="btn__arrow">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div id="alert-2" class="mt-4"></div>
+
+        </div>
+
+        <!-- ── Step 3 · Government ID & Submit ─────────────── -->
+        <div class="step-panel" hidden>
+
+          <div class="section-step mb-6">
+            <div class="section-step__num">3</div>
+            <div class="section-step__label">Government ID</div>
+          </div>
+
+          <div class="form-group">
+            <label for="gov-id" class="label-required">Government-Issued ID</label>
+            <input type="file" id="gov-id" name="Government ID"
+              accept="image/jpeg,image/png,image/heic,image/webp" required>
+            <span class="field-hint">Upload a clear photo of any valid government ID. Accepted: JPG, PNG, HEIC, WEBP. Max 10 MB.</span>
+          </div>
+
+          <div class="flex justify-between mt-8">
+            <button type="button" id="back-3" class="btn btn--ghost">Back</button>
+            <button type="button" id="submit-btn" class="btn btn--brand btn--lg">
+              Submit Profile
+              <span class="btn__arrow">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div id="alert-3" class="mt-4"></div>
+
+        </div>
+
+      </div><!-- .card -->
+    </div><!-- .container -->
+  </main>
+
+  <script src="js/main.js"></script>
+  <script>
+    requireAuth();
+
+    const stepForm   = initStepForm(3);
+    const PANELS     = Array.from(document.querySelectorAll('.step-panel'));
+    const submitBtn  = document.getElementById('submit-btn');
+    const govIdInput = document.getElementById('gov-id');
+    const PHONE_RE   = /^\+?[\d\s\-()\s]{7,15}$/;
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/heic', 'image/webp'];
+
+    function validateStep(panelIndex) {
+      let valid = true;
+      PANELS[panelIndex].querySelectorAll('[required]').forEach(el => {
+        el.classList.remove('is-error');
+        const empty = el.type === 'file' ? el.files.length === 0 : !el.value.trim();
+        if (empty) { el.classList.add('is-error'); valid = false; }
+      });
+      return valid;
+    }
+
+    // Back buttons
+    [2, 3].forEach(step => {
+      document.getElementById(`back-${step}`).addEventListener('click', () => stepForm.prev());
+    });
+
+    // Step 1 — personal + emergency
+    document.getElementById('next-1').addEventListener('click', () => {
+      if (!validateStep(0)) { showAlert('alert-1', 'Please fill in all required fields.'); return; }
+
+      const emailEl = document.getElementById('email');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
+        emailEl.classList.add('is-error');
+        showAlert('alert-1', 'Please enter a valid email address.');
+        return;
+      }
+
+      const phoneEl = document.getElementById('phone');
+      if (!PHONE_RE.test(phoneEl.value.trim())) {
+        phoneEl.classList.add('is-error');
+        showAlert('alert-1', 'Please enter a valid phone number.');
+        return;
+      }
+
+      const ecNumEl = document.getElementById('ec-number');
+      if (!PHONE_RE.test(ecNumEl.value.trim())) {
+        ecNumEl.classList.add('is-error');
+        showAlert('alert-1', 'Please enter a valid emergency contact number.');
+        return;
+      }
+
+      clearAlert('alert-1');
+      stepForm.next();
+    });
+
+    // Step 2 — lease details
+    document.getElementById('next-2').addEventListener('click', () => {
+      if (!validateStep(1)) { showAlert('alert-2', 'Please fill in all required fields.'); return; }
+
+      const leaseStart = document.getElementById('lease-start').value;
+      const leaseEnd   = document.getElementById('lease-end').value;
+      if (leaseStart && leaseEnd && leaseEnd <= leaseStart) {
+        document.getElementById('lease-end').classList.add('is-error');
+        showAlert('alert-2', 'Lease end date must be after the start date.');
+        return;
+      }
+
+      const rentEl = document.getElementById('monthly-rent');
+      if (Number(rentEl.value) <= 0) {
+        rentEl.classList.add('is-error');
+        showAlert('alert-2', 'Monthly rent must be greater than zero.');
+        return;
+      }
+
+      const depositEl = document.getElementById('security-deposit');
+      if (Number(depositEl.value) < 0) {
+        depositEl.classList.add('is-error');
+        showAlert('alert-2', 'Security deposit cannot be negative.');
+        return;
+      }
+
+      clearAlert('alert-2');
+      stepForm.next();
+    });
+
+    // Step 3 — ID upload + submit
+    submitBtn.addEventListener('click', async () => {
+      if (!validateStep(2)) { showAlert('alert-3', 'Please upload your government ID.'); return; }
+
+      const file = govIdInput.files[0];
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        govIdInput.classList.add('is-error');
+        showAlert('alert-3', 'Only JPEG, PNG, HEIC, or WebP images are accepted.');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        govIdInput.classList.add('is-error');
+        showAlert('alert-3', 'File must be under 10 MB.');
+        return;
+      }
+
+      setLoading(submitBtn, true);
+      clearAlert('alert-3');
+      try {
+        const formData = new FormData();
+        formData.append('accessCode', getAccessCode());
+        document.querySelectorAll('.step-panel input:not([type="file"])[name]').forEach(el => {
+          formData.append(el.name, el.value);
+        });
+        formData.append('Government ID', file);
+        await apiPostForm(WEBHOOKS.onboarding, formData);
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        showAlert('alert-3', err.message || DEFAULT_ERROR_MSG);
+        setLoading(submitBtn, false);
+      }
+    });
+  </script>
+
+</body>
+</html>
