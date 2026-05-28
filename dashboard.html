@@ -69,6 +69,29 @@
         </div>
       </div>
 
+      <!-- Incomplete-onboarding banner (shown only if onboarded === false) -->
+      <div id="onboarding-banner" class="alert alert--warning mb-8" style="display:none;align-items:flex-start;gap:var(--space-4);">
+        <div class="alert__icon" style="flex-shrink:0;margin-top:2px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-weight:var(--fw-semi);font-size:var(--text-sm);color:#92400e;margin-bottom:var(--space-1);">Complete Your Profile</div>
+          <p style="margin:0;font-size:var(--text-sm);color:#92400e;line-height:1.5;">Your tenant profile isn't set up yet. Please complete onboarding to access all portal features.</p>
+        </div>
+        <a href="onboarding.html" class="btn btn--sm" style="flex-shrink:0;background:#d97706;border-color:#d97706;color:#fff;white-space:nowrap;">
+          Complete Now
+          <span class="btn__arrow">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
       <!-- Page header -->
       <div class="page-header">
         <div class="page-header__text">
@@ -164,6 +187,11 @@
       document.getElementById('tenant-unit').textContent =
         tenant?.['Unit Number'] ? 'Unit ' + tenant['Unit Number'] : '';
       document.getElementById('tenant-code').textContent = code || '';
+
+      const banner = document.getElementById('onboarding-banner');
+      if (banner && tenant && tenant.onboarded === false) {
+        banner.style.display = 'flex';
+      }
     }
 
     init();
