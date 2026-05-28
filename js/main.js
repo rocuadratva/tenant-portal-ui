@@ -4,12 +4,13 @@
 const DEFAULT_ERROR_MSG = 'Something went wrong. Please try again.';
 
 const WEBHOOKS = {
-  verifyCode:     'https://n8n.srv1326537.hstgr.cloud/webhook/verify-access-code',
-  onboarding:     'https://n8n.srv1326537.hstgr.cloud/webhook/tenant-onboarding',
-  maintenance:    'https://n8n.srv1326537.hstgr.cloud/webhook/maintenance-request',
-  contact:        'https://n8n.srv1326537.hstgr.cloud/webhook/tenant-contact',
-  getDocuments:   'https://n8n.srv1326537.hstgr.cloud/webhook/get-tenant-documents',
-  getTenantInfo:  'https://n8n.srv1326537.hstgr.cloud/webhook/get-tenant-info',
+  verifyCode:            'https://n8n.srv1326537.hstgr.cloud/webhook/verify-access-code',
+  onboarding:            'https://n8n.srv1326537.hstgr.cloud/webhook/tenant-onboarding',
+  newTenantRegistration: 'https://n8n.srv1326537.hstgr.cloud/webhook/new-tenant-registration',
+  maintenance:           'https://n8n.srv1326537.hstgr.cloud/webhook/maintenance-request',
+  contact:               'https://n8n.srv1326537.hstgr.cloud/webhook/tenant-contact',
+  getDocuments:          'https://n8n.srv1326537.hstgr.cloud/webhook/get-tenant-documents',
+  getTenantInfo:         'https://n8n.srv1326537.hstgr.cloud/webhook/get-tenant-info',
 };
 
 /* ============================================================

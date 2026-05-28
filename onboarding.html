@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Complete Your Profile — Tenant Portal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — Tenant Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body class="page">
 
-  <!-- ── Navbar ─────────────────────────────────────────────── -->
+  <!-- ── Navbar (simplified — public page, no tenant nav links) ── -->
   <nav class="navbar">
     <div class="container">
       <div class="navbar__inner">
-
-        <a href="dashboard.html" class="navbar__brand">
+        <a href="index.html" class="navbar__brand">
           <div class="navbar__brand-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -25,22 +24,6 @@
           </div>
           Tenant<span>Portal</span>
         </a>
-
-        <button class="navbar__menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
-        </button>
-
-        <div class="navbar__nav">
-          <a href="documents.html" class="nav-link">Documents</a>
-          <a href="maintenance.html" class="nav-link">Maintenance</a>
-          <a href="contact.html" class="nav-link">Contact</a>
-          <button class="btn btn--ghost btn--sm" data-logout>Log out</button>
-        </div>
-
       </div>
     </div>
   </nav>
@@ -52,46 +35,40 @@
       <!-- Page header -->
       <div class="page-header">
         <div class="page-header__text">
-          <h1 class="page-header__title">Complete Your Profile</h1>
-          <p class="page-header__subtitle">This sets up your tenant account. It only takes a few minutes.</p>
+          <h1 class="page-header__title">Register as a Tenant</h1>
+          <p class="page-header__subtitle">Complete the form below. Your access code will be emailed to you once registration is processed.</p>
         </div>
       </div>
 
-      <!-- Progress steps -->
-      <div class="progress-steps" role="list" aria-label="Onboarding steps">
+      <!-- Progress steps (2-step) -->
+      <div class="progress-steps" role="list" aria-label="Registration steps">
         <div class="step" role="listitem">
           <div class="step__dot">1</div>
-          <div class="step__label">Personal</div>
+          <div class="step__label">Your Details</div>
         </div>
         <div class="step" role="listitem">
           <div class="step__dot">2</div>
-          <div class="step__label">Lease</div>
-        </div>
-        <div class="step" role="listitem">
-          <div class="step__dot">3</div>
-          <div class="step__label">ID &amp; Submit</div>
-        </div>
-        <div class="step" role="listitem">
-          <div class="step__dot">4</div>
-          <div class="step__label">Done</div>
+          <div class="step__label">Complete</div>
         </div>
       </div>
 
       <div class="card card--padded card--raised">
 
-        <!-- ── Step 1 · Personal & Emergency ───────────────── -->
+        <!-- ── Step 1 · Registration Form ─────────────────────── -->
         <div class="step-panel">
 
           <div class="section-step mb-6">
             <div class="section-step__num">1</div>
-            <div class="section-step__label">Personal &amp; Emergency Info</div>
+            <div class="section-step__label">Registration Details</div>
           </div>
+
+          <div id="alert-reg"></div>
 
           <div class="form-group">
             <label for="full-name" class="label-required">Full Name</label>
-            <input type="text" id="full-name" name="Full Name"
+            <input type="text" id="full-name" name="fullName"
               placeholder="e.g. Juan dela Cruz"
-              autocomplete="name" required>
+              autocomplete="name" required />
           </div>
 
           <div class="form-group">
@@ -103,9 +80,9 @@
                   <polyline points="22,6 12,13 2,6"/>
                 </svg>
               </span>
-              <input type="email" id="email" name="Email"
+              <input type="email" id="email" name="email"
                 placeholder="you@email.com"
-                autocomplete="email" required>
+                autocomplete="email" required />
             </div>
           </div>
 
@@ -117,39 +94,45 @@
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.49A2 2 0 0 1 3.6 1.31h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9c1.27 2.19 2.82 3.74 5 5l1.27-.89a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/>
                 </svg>
               </span>
-              <input type="tel" id="phone" name="Phone"
+              <input type="tel" id="phone" name="phone"
                 placeholder="+63 9XX XXX XXXX"
-                autocomplete="tel" required>
+                autocomplete="tel" required />
             </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address" class="label-required">Full Address</label>
+            <input type="text" id="address" name="address"
+              placeholder="Street, Barangay, City"
+              autocomplete="street-address" required />
           </div>
 
           <div class="divider mt-8 mb-6"></div>
 
           <div class="form-group">
             <label for="ec-name" class="label-required">Emergency Contact Name</label>
-            <input type="text" id="ec-name" name="Emergency Contact Name"
+            <input type="text" id="ec-name" name="emergencyContactName"
               placeholder="Full name of your emergency contact"
-              autocomplete="off" required>
+              autocomplete="off" required />
           </div>
 
           <div class="form-group">
-            <label for="ec-number" class="label-required">Emergency Contact Number</label>
+            <label for="ec-phone" class="label-required">Emergency Contact Phone</label>
             <div class="input-wrap">
               <span class="input-icon" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.49A2 2 0 0 1 3.6 1.31h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9c1.27 2.19 2.82 3.74 5 5l1.27-.89a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/>
                 </svg>
               </span>
-              <input type="tel" id="ec-number" name="Emergency Contact Number"
+              <input type="tel" id="ec-phone" name="emergencyContactPhone"
                 placeholder="+63 9XX XXX XXXX"
-                autocomplete="off" required>
+                autocomplete="off" required />
             </div>
           </div>
 
-          <div class="flex justify-between mt-8">
-            <div></div>
-            <button type="button" id="next-1" class="btn btn--primary">
-              Next
+          <div class="mt-8">
+            <button type="button" id="submit-btn" class="btn btn--brand btn--full btn--lg">
+              Submit Registration
               <span class="btn__arrow">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
@@ -157,96 +140,11 @@
               </span>
             </button>
           </div>
-          <div id="alert-1" class="mt-4"></div>
 
         </div>
 
-        <!-- ── Step 2 · Unit & Lease ────────────────────────── -->
+        <!-- ── Step 2 · Success ────────────────────────────────── -->
         <div class="step-panel" hidden>
-
-          <div class="section-step mb-6">
-            <div class="section-step__num">2</div>
-            <div class="section-step__label">Unit &amp; Lease Details</div>
-          </div>
-
-          <div class="form-group">
-            <label for="unit-number" class="label-required">Unit Number</label>
-            <input type="text" id="unit-number" name="Unit Number"
-              placeholder="e.g. 2A or Room 4"
-              autocomplete="off" required>
-          </div>
-
-          <div class="form-row mt-6">
-            <div class="form-group" style="margin-top:0">
-              <label for="lease-start" class="label-required">Lease Start Date</label>
-              <input type="date" id="lease-start" name="Lease Start Date" required>
-            </div>
-            <div class="form-group" style="margin-top:0">
-              <label for="lease-end" class="label-required">Lease End Date</label>
-              <input type="date" id="lease-end" name="Lease End Date" required>
-            </div>
-          </div>
-
-          <div class="form-row mt-6">
-            <div class="form-group" style="margin-top:0">
-              <label for="monthly-rent" class="label-required">Monthly Rent (₱)</label>
-              <input type="number" id="monthly-rent" name="Monthly Rent"
-                placeholder="e.g. 8000" min="0" step="1" required>
-            </div>
-            <div class="form-group" style="margin-top:0">
-              <label for="security-deposit" class="label-required">Security Deposit (₱)</label>
-              <input type="number" id="security-deposit" name="Security Deposit"
-                placeholder="e.g. 16000" min="0" step="1" required>
-            </div>
-          </div>
-
-          <div class="flex justify-between mt-8">
-            <button type="button" id="back-2" class="btn btn--ghost">Back</button>
-            <button type="button" id="next-2" class="btn btn--primary">
-              Next
-              <span class="btn__arrow">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
-                </svg>
-              </span>
-            </button>
-          </div>
-          <div id="alert-2" class="mt-4"></div>
-
-        </div>
-
-        <!-- ── Step 3 · Government ID & Submit ─────────────── -->
-        <div class="step-panel" hidden>
-
-          <div class="section-step mb-6">
-            <div class="section-step__num">3</div>
-            <div class="section-step__label">Government ID</div>
-          </div>
-
-          <div class="form-group">
-            <label for="gov-id" class="label-required">Government-Issued ID</label>
-            <input type="file" id="gov-id" name="Government ID"
-              accept="image/jpeg,image/png,image/heic,image/webp" required>
-            <span class="field-hint">Upload a clear photo of any valid government ID. Accepted: JPG, PNG, HEIC, WEBP. Max 10 MB.</span>
-          </div>
-
-          <div class="flex justify-between mt-8">
-            <button type="button" id="back-3" class="btn btn--ghost">Back</button>
-            <button type="button" id="submit-btn" class="btn btn--brand btn--lg">
-              Submit Profile
-              <span class="btn__arrow">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
-                </svg>
-              </span>
-            </button>
-          </div>
-          <div id="alert-3" class="mt-4"></div>
-
-        </div>
-
-        <!-- ── Step 4 · Success ────────────────────────────────── -->
-        <div class="step-panel" hidden id="step-success">
 
           <div style="text-align:center;padding:var(--space-4) 0 var(--space-8);">
             <div class="icon-badge icon-badge--success icon-badge--lg" style="margin:0 auto var(--space-6);">
@@ -254,28 +152,38 @@
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
-            <h2 style="font-size:var(--text-2xl);font-weight:var(--fw-bold);color:var(--color-text);margin-bottom:var(--space-2);">Profile Submitted!</h2>
-            <p style="font-size:var(--text-sm);color:var(--color-text-muted);max-width:380px;margin:0 auto;line-height:1.6;">
-              Your tenant profile is set up. Your document folders are ready in Google Drive — use them to upload contracts, receipts, and other files any time.
+            <h2 style="font-size:var(--text-2xl);font-weight:var(--fw-bold);color:var(--color-text);margin-bottom:var(--space-2);">Registration Complete!</h2>
+            <p id="success-email-msg" style="font-size:var(--text-sm);color:var(--color-text-muted);max-width:380px;margin:0 auto var(--space-6);line-height:1.6;">
+              Your access code has been sent to your email.
             </p>
+            <a id="drive-folder-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn--brand btn--lg">
+              Open My Drive Folder
+              <span class="btn__arrow">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+              </span>
+            </a>
           </div>
 
           <div class="divider mb-6"></div>
 
-          <p style="font-size:var(--text-xs);font-weight:var(--fw-semi);text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-4);">Your Drive Folders</p>
-
-          <div id="folder-buttons" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);"></div>
+          <div class="card card--padded" style="background:var(--color-surface-2);border:1px solid var(--color-border);">
+            <p style="font-size:var(--text-xs);font-weight:var(--fw-semi);text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-3);">Next steps — upload your documents to your Drive folder</p>
+            <ul style="font-size:var(--text-sm);color:var(--color-text-muted);padding-left:var(--space-5);line-height:1.8;margin:0;">
+              <li><strong>01 - Identification:</strong> Government-issued ID, passport, driver's license</li>
+              <li><strong>02 - Lease &amp; Contracts:</strong> Signed lease agreement</li>
+              <li>Request other documents from your property manager as needed</li>
+            </ul>
+          </div>
 
           <div class="divider mt-6 mb-6"></div>
 
-          <a href="dashboard.html" class="btn btn--brand btn--lg btn--full">
-            Go to Dashboard
-            <span class="btn__arrow">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
-              </svg>
-            </span>
-          </a>
+          <div style="text-align:center;">
+            <a href="index.html" style="font-size:var(--text-sm);color:var(--color-accent);">&#8592; Return to Login</a>
+          </div>
 
         </div>
 
@@ -283,154 +191,115 @@
     </div><!-- .container -->
   </main>
 
+  <!-- DEV: Autofill button (yellow, floating bottom-right) -->
+  <button id="dev-autofill" type="button" onclick="devAutofill()" style="position:fixed;bottom:64px;right:16px;background:#fbbf24;color:#1c1917;font-size:12px;font-weight:700;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;z-index:9998;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+    DEV: Autofill
+  </button>
+
+  <!-- DEV NAV TOOLBAR — remove before launch -->
+  <div style="position:fixed;bottom:0;left:0;right:0;background:#f97316;color:white;padding:8px 16px;display:flex;gap:16px;align-items:center;font-size:12px;font-weight:600;z-index:9999;flex-wrap:wrap;">
+    <span style="opacity:0.7;text-transform:uppercase;letter-spacing:0.08em;flex-shrink:0;">DEV NAV</span>
+    <a href="index.html" style="color:white;text-decoration:none;">Home</a>
+    <a href="onboarding.html" style="color:white;text-decoration:none;">Register</a>
+    <a href="dashboard.html" style="color:white;text-decoration:none;">Dashboard</a>
+    <a href="documents.html" style="color:white;text-decoration:none;">Documents</a>
+    <a href="maintenance.html" style="color:white;text-decoration:none;">Maintenance</a>
+    <a href="contact.html" style="color:white;text-decoration:none;">Contact</a>
+  </div>
+
   <script src="js/main.js"></script>
   <script>
-    requireAuth();
+    const stepForm  = initStepForm(2);
+    const submitBtn = document.getElementById('submit-btn');
+    const PHONE_RE  = /^\+?[\d\s\-()\s]{7,15}$/;
 
-    const stepForm   = initStepForm(4);
-    const PANELS     = Array.from(document.querySelectorAll('.step-panel'));
-    const submitBtn  = document.getElementById('submit-btn');
-    const govIdInput = document.getElementById('gov-id');
-    const PHONE_RE   = /^\+?[\d\s\-()\s]{7,15}$/;
-    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/heic', 'image/webp'];
-
-    const FOLDER_LABELS = {
-      ids: {
-        label: 'IDs',
-        icon: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"/><line x1="8" y1="13" x2="16" y2="13"/></svg>'
-      },
-      contracts: {
-        label: 'Contracts',
-        icon: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'
-      },
-      receipts: {
-        label: 'Receipts',
-        icon: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4V4z"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="9" y1="4" x2="9" y2="20"/></svg>'
-      },
-      others: {
-        label: 'Others',
-        icon: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>'
+    function setRegLoading(loading) {
+      if (loading) {
+        submitBtn.disabled = true;
+        submitBtn.dataset.originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="spinner"></span> Processing your registration...';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = submitBtn.dataset.originalText || '';
       }
-    };
-
-    function validateStep(panelIndex) {
-      let valid = true;
-      PANELS[panelIndex].querySelectorAll('[required]').forEach(el => {
-        el.classList.remove('is-error');
-        const empty = el.type === 'file' ? el.files.length === 0 : !el.value.trim();
-        if (empty) { el.classList.add('is-error'); valid = false; }
-      });
-      return valid;
     }
 
-    // Back buttons
-    [2, 3].forEach(step => {
-      document.getElementById(`back-${step}`).addEventListener('click', () => stepForm.prev());
-    });
+    submitBtn.addEventListener('click', async () => {
+      const fieldIds = ['full-name', 'email', 'phone', 'address', 'ec-name', 'ec-phone'];
+      let valid = true;
 
-    // Step 1 — personal + emergency
-    document.getElementById('next-1').addEventListener('click', () => {
-      if (!validateStep(0)) { showAlert('alert-1', 'Please fill in all required fields.'); return; }
+      fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('is-error');
+        if (!el.value.trim()) { el.classList.add('is-error'); valid = false; }
+      });
+
+      if (!valid) {
+        showAlert('alert-reg', 'Please fill in all required fields.');
+        return;
+      }
 
       const emailEl = document.getElementById('email');
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
         emailEl.classList.add('is-error');
-        showAlert('alert-1', 'Please enter a valid email address.');
+        showAlert('alert-reg', 'Please enter a valid email address.');
         return;
       }
 
       const phoneEl = document.getElementById('phone');
       if (!PHONE_RE.test(phoneEl.value.trim())) {
         phoneEl.classList.add('is-error');
-        showAlert('alert-1', 'Please enter a valid phone number.');
+        showAlert('alert-reg', 'Please enter a valid phone number.');
         return;
       }
 
-      const ecNumEl = document.getElementById('ec-number');
-      if (!PHONE_RE.test(ecNumEl.value.trim())) {
-        ecNumEl.classList.add('is-error');
-        showAlert('alert-1', 'Please enter a valid emergency contact number.');
+      const ecPhoneEl = document.getElementById('ec-phone');
+      if (!PHONE_RE.test(ecPhoneEl.value.trim())) {
+        ecPhoneEl.classList.add('is-error');
+        showAlert('alert-reg', 'Please enter a valid emergency contact phone number.');
         return;
       }
 
-      clearAlert('alert-1');
-      stepForm.next();
-    });
+      clearAlert('alert-reg');
+      setRegLoading(true);
 
-    // Step 2 — lease details
-    document.getElementById('next-2').addEventListener('click', () => {
-      if (!validateStep(1)) { showAlert('alert-2', 'Please fill in all required fields.'); return; }
-
-      const leaseStart = document.getElementById('lease-start').value;
-      const leaseEnd   = document.getElementById('lease-end').value;
-      if (leaseStart && leaseEnd && leaseEnd <= leaseStart) {
-        document.getElementById('lease-end').classList.add('is-error');
-        showAlert('alert-2', 'Lease end date must be after the start date.');
-        return;
-      }
-
-      const rentEl = document.getElementById('monthly-rent');
-      if (Number(rentEl.value) <= 0) {
-        rentEl.classList.add('is-error');
-        showAlert('alert-2', 'Monthly rent must be greater than zero.');
-        return;
-      }
-
-      const depositEl = document.getElementById('security-deposit');
-      if (Number(depositEl.value) < 0) {
-        depositEl.classList.add('is-error');
-        showAlert('alert-2', 'Security deposit cannot be negative.');
-        return;
-      }
-
-      clearAlert('alert-2');
-      stepForm.next();
-    });
-
-    // Step 3 — ID upload + submit
-    submitBtn.addEventListener('click', async () => {
-      if (!validateStep(2)) { showAlert('alert-3', 'Please upload your government ID.'); return; }
-
-      const file = govIdInput.files[0];
-      if (!ALLOWED_TYPES.includes(file.type)) {
-        govIdInput.classList.add('is-error');
-        showAlert('alert-3', 'Only JPEG, PNG, HEIC, or WebP images are accepted.');
-        return;
-      }
-      if (file.size > 10 * 1024 * 1024) {
-        govIdInput.classList.add('is-error');
-        showAlert('alert-3', 'File must be under 10 MB.');
-        return;
-      }
-
-      setLoading(submitBtn, true);
-      clearAlert('alert-3');
       try {
-        const formData = new FormData();
-        formData.append('accessCode', getAccessCode());
-        document.querySelectorAll('.step-panel input:not([type="file"])[name]').forEach(el => {
-          formData.append(el.name, el.value);
+        const result = await apiPost(WEBHOOKS.newTenantRegistration, {
+          fullName:              document.getElementById('full-name').value.trim(),
+          email:                 document.getElementById('email').value.trim(),
+          phone:                 document.getElementById('phone').value.trim(),
+          address:               document.getElementById('address').value.trim(),
+          emergencyContactName:  document.getElementById('ec-name').value.trim(),
+          emergencyContactPhone: document.getElementById('ec-phone').value.trim(),
         });
-        formData.append('Government ID', file);
-        const result = await apiPostForm(WEBHOOKS.onboarding, formData);
 
-        if (result && result.folders) {
-          const container = document.getElementById('folder-buttons');
-          container.innerHTML = Object.entries(result.folders).map(([key, url]) => {
-            const meta = FOLDER_LABELS[key] || { label: key, icon: '' };
-            return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer"
-              class="btn btn--secondary" style="justify-content:flex-start;gap:var(--space-2);">
-              ${meta.icon}${escapeHtml(meta.label)}
-            </a>`;
-          }).join('');
+        if (result && result.success) {
+          if (result.tenantFolderUrl) {
+            document.getElementById('drive-folder-btn').href = escapeHtml(result.tenantFolderUrl);
+          }
+          if (result.email) {
+            document.getElementById('success-email-msg').textContent =
+              'Your access code has been sent to ' + result.email + '.';
+          }
+          document.getElementById('dev-autofill').hidden = true;
+          stepForm.showStep(2);
+        } else {
+          throw new Error(result && result.message ? result.message : DEFAULT_ERROR_MSG);
         }
-
-        stepForm.showStep(4);
       } catch (err) {
-        showAlert('alert-3', err.message || DEFAULT_ERROR_MSG);
-        setLoading(submitBtn, false);
+        showAlert('alert-reg', err.message || DEFAULT_ERROR_MSG);
+        setRegLoading(false);
       }
     });
+
+    function devAutofill() {
+      document.getElementById('full-name').value = 'Maria Santos';
+      document.getElementById('email').value     = 'maria.santos.dev@gmail.com';
+      document.getElementById('phone').value     = '+63 912 345 6789';
+      document.getElementById('address').value   = '123 Mabini Street, Barangay Central, Makati City';
+      document.getElementById('ec-name').value   = 'Jose Santos';
+      document.getElementById('ec-phone').value  = '+63 917 987 6543';
+    }
   </script>
 
 </body>
