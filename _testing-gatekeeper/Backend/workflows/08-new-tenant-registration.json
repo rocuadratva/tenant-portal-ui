@@ -1,0 +1,428 @@
+{
+  "id": "zycpFfWvZlIFQ5lF",
+  "name": "PM — 08: New Tenant Registration (v2 Gatekeeper TEST)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-tenant-registration-v2",
+        "responseMode": "responseNode",
+        "options": { "allowedOrigins": "*" }
+      },
+      "id": "wh-main",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [240, 400],
+      "webhookId": "b4289168-c5b0-4a0a-a656-17ad0ef77a51",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+                "combinator": "and",
+                "conditions": [{ "id": "c-verify", "leftValue": "={{ $json.body.mode }}", "rightValue": "verify", "operator": { "type": "string", "operation": "equals" } }]
+              },
+              "renameOutput": true,
+              "outputKey": "verify"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+                "combinator": "and",
+                "conditions": [{ "id": "c-register", "leftValue": "={{ $json.body.mode }}", "rightValue": "register", "operator": { "type": "string", "operation": "equals" } }]
+              },
+              "renameOutput": true,
+              "outputKey": "register"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "sw-mode",
+      "name": "Switch — Route by Mode",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [480, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$input.first().json.body;const spam=/^(test|asdf|dummy|fake|abc|xxx|sample)/i;if(!b.fullName||!b.email||!b.phone||!(b.unit||b.address))throw new Error('Missing required fields');if(!b.consentGiven)throw new Error('DPA consent required');if(spam.test(b.fullName))throw new Error('Invalid name format');if(!b.govIdBase64||!b.selfieBase64)throw new Error('Both documents required');const unit=b.unit||b.address||'';const notionQuery={filter:{or:[{property:'Email',email:{equals:b.email}},{property:'Phone',phone_number:{equals:b.phone}},{property:'Unit / Room',rich_text:{contains:unit}}]},page_size:1};return[{json:{fullName:b.fullName.trim(),email:b.email.trim().toLowerCase(),phone:b.phone.trim(),unit,emergencyContactName:b.emergencyContactName||'',emergencyContactPhone:b.emergencyContactPhone||'',govIdBase64:b.govIdBase64,selfieBase64:b.selfieBase64,consentGiven:true,notionQuery}}];"
+      },
+      "id": "v1-validate",
+      "name": "Code — V1: Input Validate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "const notionItem=$input.first().json;const b=$('Code — V1: Input Validate').first().json;const isDuplicate=!!(notionItem&&notionItem.id);return[{json:{...b,isDuplicate}}];"
+      },
+      "id": "v3-process",
+      "name": "Code — V2: Process Query Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 160]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [{ "id": "c1", "leftValue": "={{ $json.isDuplicate }}", "operator": { "type": "boolean", "operation": "true", "singleValue": true } }]
+        },
+        "options": {}
+      },
+      "id": "v4-if-dup",
+      "name": "IF — Duplicate?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1440, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { ...$input.first().json, loggedDecision: 'BLOCKED_DUPLICATE' } }];"
+      },
+      "id": "v5-log-dup",
+      "name": "Code — Log: Duplicate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1680, 64]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ valid: false, reason: 'This contact or unit is already registered. Contact the owner if you need help.' }) }}",
+        "options": { "responseCode": 409 }
+      },
+      "id": "v6-resp-dup",
+      "name": "Respond — Verify: Duplicate",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1920, 64]
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$input.first().json;const sys='You are a tenant identity verification agent. Output ONLY a raw JSON object with no markdown or code blocks. Required fields: decision (APPROVED or REJECTED), confidence (number 0.0-1.0), reason (string), flags (array). Valid flags: face_mismatch name_mismatch id_unreadable selfie_unreadable liveness_fail id_appears_fake. Set decision=APPROVED only if the selfie face matches the ID face AND the submitted name matches the name on the ID. Be strict about face mismatches. Raw JSON only.';const payload={model:'anthropic/claude-sonnet-4-6',messages:[{role:'system',content:sys},{role:'user',content:[{type:'text',text:'Submitted name: ['+b.fullName+']. Two images: (1) government ID, (2) selfie. Verify that the selfie face matches the ID face AND the submitted name matches the name on the ID. Return ONLY the raw JSON decision object.'},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+b.govIdBase64,detail:'high'}},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+b.selfieBase64,detail:'high'}},]}],max_tokens:300,temperature:0.1};return[{json:{payload,originalData:b}}];"
+      },
+      "id": "v7-build-ai",
+      "name": "Code — V3: Build AI Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1680, 272]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{OPENROUTER_API_KEY}}" },
+            { "name": "HTTP-Referer", "value": "https://n8n.srv1326537.hstgr.cloud" },
+            { "name": "X-Title", "value": "Tenant Registration Gatekeeper" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify($json.payload) }}",
+        "options": {}
+      },
+      "id": "v8-openrouter",
+      "name": "HTTP Request — OpenRouter",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [1920, 272]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$input.first().json;const orig=$('Code — V3: Build AI Request').first().json.originalData;const content=r?.choices?.[0]?.message?.content||'';let d;try{const s=content.indexOf('{');const e=content.lastIndexOf('}');if(s===-1||e===-1)throw new Error('No JSON in AI response');d=JSON.parse(content.substring(s,e+1));}catch(e){return[{json:{...orig,aiDecision:'REJECTED',aiConfidence:0,aiReason:'Parse error: '+e.message,aiFlags:['parse_error']}}];}return[{json:{...orig,aiDecision:d.decision||'REJECTED',aiConfidence:+(d.confidence)||0,aiReason:d.reason||'',aiFlags:Array.isArray(d.flags)?d.flags:[]}}];"
+      },
+      "id": "v9-parse-ai",
+      "name": "Code — V4: Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2160, 272]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "combinator": "and",
+          "conditions": [{ "id": "c2", "leftValue": "={{ $json.aiDecision }}", "rightValue": "APPROVED", "operator": { "type": "string", "operation": "equals" } }]
+        },
+        "options": {}
+      },
+      "id": "v10-if-ai",
+      "name": "IF — AI: Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2400, 272]
+    },
+    {
+      "parameters": {
+        "jsCode": "function sha256(b){const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];const H=new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);const r=(x,n)=>(x>>>n)|(x<<(32-n));const l=b.length,pl=Math.ceil((l+9)/64)*64,p=new Uint8Array(pl);p.set(b);p[l]=0x80;const d0=new DataView(p.buffer);d0.setUint32(pl-4,(l*8)>>>0,false);d0.setUint32(pl-8,Math.floor(l*8/0x100000000),false);for(let i=0;i<pl;i+=64){const W=new Uint32Array(64),dv=new DataView(p.buffer,i,64);for(let j=0;j<16;j++)W[j]=dv.getUint32(j*4,false);for(let j=16;j<64;j++){const s0=r(W[j-15],7)^r(W[j-15],18)^(W[j-15]>>>3),s1=r(W[j-2],17)^r(W[j-2],19)^(W[j-2]>>>10);W[j]=(W[j-16]+s0+W[j-7]+s1)>>>0;}let a=H[0],bb=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];for(let j=0;j<64;j++){const t1=(h+(r(e,6)^r(e,11)^r(e,25))+(e&f^~e&g)+K[j]+W[j])>>>0,t2=((r(a,2)^r(a,13)^r(a,22))+(a&bb^a&c^bb&c))>>>0;h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=bb;bb=a;a=(t1+t2)>>>0;}H[0]=(H[0]+a)>>>0;H[1]=(H[1]+bb)>>>0;H[2]=(H[2]+c)>>>0;H[3]=(H[3]+d)>>>0;H[4]=(H[4]+e)>>>0;H[5]=(H[5]+f)>>>0;H[6]=(H[6]+g)>>>0;H[7]=(H[7]+h)>>>0;}return H;}function hmacHex(key,msg){const enc=new TextEncoder();let kb=enc.encode(key);if(kb.length>64){const h=sha256(kb),t=new Uint8Array(32),dv=new DataView(t.buffer);h.forEach((v,i)=>dv.setUint32(i*4,v,false));kb=t;}const k=new Uint8Array(64);k.set(kb);const ip=k.map(x=>x^0x36),op=k.map(x=>x^0x5c),mb=enc.encode(msg),inn=new Uint8Array(64+mb.length);inn.set(ip);inn.set(mb,64);const ih=sha256(inn),ib=new Uint8Array(32),id=new DataView(ib.buffer);ih.forEach((v,i)=>id.setUint32(i*4,v,false));const out=new Uint8Array(96);out.set(op);out.set(ib,64);return Array.from(sha256(out)).map(v=>v.toString(16).padStart(8,'0')).join('');}const secret='gatekeeper-hmac-secret-2024';const d=$input.first().json;const tp=JSON.stringify({email:d.email,unit:d.unit,exp:Date.now()+600000});const token=hmacHex(secret,tp);return[{json:{...d,token,tokenPayload:tp}}];"
+      },
+      "id": "v11-gen-token",
+      "name": "Code — V5: Generate Token",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2640, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { ...$input.first().json, loggedDecision: 'APPROVED' } }];"
+      },
+      "id": "v12-log-ok",
+      "name": "Code — Log: Approved",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2880, 160]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ valid: true, token: $json.token, tokenPayload: $json.tokenPayload, reason: $json.aiReason, flags: $json.aiFlags, confidence: $json.aiConfidence }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "id": "v13-resp-ok",
+      "name": "Respond — Verify: Approved",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3120, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { ...$input.first().json, loggedDecision: 'REJECTED' } }];"
+      },
+      "id": "v14-log-rej",
+      "name": "Code — Log: Rejected",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2640, 368]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ valid: false, reason: $json.aiReason, flags: $json.aiFlags, confidence: $json.aiConfidence }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "id": "v15-resp-rej",
+      "name": "Respond — Verify: Rejected",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2880, 368]
+    },
+    {
+      "parameters": {
+        "jsCode": "function sha256(b){const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];const H=new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);const r=(x,n)=>(x>>>n)|(x<<(32-n));const l=b.length,pl=Math.ceil((l+9)/64)*64,p=new Uint8Array(pl);p.set(b);p[l]=0x80;const d0=new DataView(p.buffer);d0.setUint32(pl-4,(l*8)>>>0,false);d0.setUint32(pl-8,Math.floor(l*8/0x100000000),false);for(let i=0;i<pl;i+=64){const W=new Uint32Array(64),dv=new DataView(p.buffer,i,64);for(let j=0;j<16;j++)W[j]=dv.getUint32(j*4,false);for(let j=16;j<64;j++){const s0=r(W[j-15],7)^r(W[j-15],18)^(W[j-15]>>>3),s1=r(W[j-2],17)^r(W[j-2],19)^(W[j-2]>>>10);W[j]=(W[j-16]+s0+W[j-7]+s1)>>>0;}let a=H[0],bb=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];for(let j=0;j<64;j++){const t1=(h+(r(e,6)^r(e,11)^r(e,25))+(e&f^~e&g)+K[j]+W[j])>>>0,t2=((r(a,2)^r(a,13)^r(a,22))+(a&bb^a&c^bb&c))>>>0;h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=bb;bb=a;a=(t1+t2)>>>0;}H[0]=(H[0]+a)>>>0;H[1]=(H[1]+bb)>>>0;H[2]=(H[2]+c)>>>0;H[3]=(H[3]+d)>>>0;H[4]=(H[4]+e)>>>0;H[5]=(H[5]+f)>>>0;H[6]=(H[6]+g)>>>0;H[7]=(H[7]+h)>>>0;}return H;}function hmacHex(key,msg){const enc=new TextEncoder();let kb=enc.encode(key);if(kb.length>64){const h=sha256(kb),t=new Uint8Array(32),dv=new DataView(t.buffer);h.forEach((v,i)=>dv.setUint32(i*4,v,false));kb=t;}const k=new Uint8Array(64);k.set(kb);const ip=k.map(x=>x^0x36),op=k.map(x=>x^0x5c),mb=enc.encode(msg),inn=new Uint8Array(64+mb.length);inn.set(ip);inn.set(mb,64);const ih=sha256(inn),ib=new Uint8Array(32),id=new DataView(ib.buffer);ih.forEach((v,i)=>id.setUint32(i*4,v,false));const out=new Uint8Array(96);out.set(op);out.set(ib,64);return Array.from(sha256(out)).map(v=>v.toString(16).padStart(8,'0')).join('');}const secret='gatekeeper-hmac-secret-2024';const b=$input.first().json.body;const{token,tokenPayload}=b;if(!token||!tokenPayload)return[{json:{...b,tokenValid:false,tokenError:'Missing token'}}];try{const exp=hmacHex(secret,tokenPayload);if(token!==exp)return[{json:{...b,tokenValid:false,tokenError:'Invalid token'}}];const p=JSON.parse(tokenPayload);if(Date.now()>p.exp)return[{json:{...b,tokenValid:false,tokenError:'Token expired'}}];const L='ABCDEFGHJKMNPQRSTUVWXYZ',D='23456789';let code='';for(let i=0;i<3;i++)code+=L[Math.floor(Math.random()*L.length)];for(let i=0;i<3;i++)code+=D[Math.floor(Math.random()*D.length)];return[{json:{...b,tokenValid:true,accessCode:code,registeredAt:new Date().toISOString()}}];}catch(e){return[{json:{...b,tokenValid:false,tokenError:e.message}}];}"
+      },
+      "id": "r1-validate",
+      "name": "Code — R1: Validate Token",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 592]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [{ "id": "c3", "leftValue": "={{ $json.tokenValid }}", "operator": { "type": "boolean", "operation": "true", "singleValue": true } }]
+        },
+        "options": {}
+      },
+      "id": "r2-if-token",
+      "name": "IF — Token Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [960, 592]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: false, error: $json.tokenError || 'Invalid or expired verification token.' }) }}",
+        "options": { "responseCode": 401 }
+      },
+      "id": "r3-resp-inv",
+      "name": "Respond — Token Invalid",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1200, 720]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": { "__rl": true, "value": "719fe5aaf2f6465db75c1749dce3ab31", "mode": "id" },
+        "propertiesUi": {
+          "propertyValues": [
+            { "key": "Name|title", "title": "={{ $json.fullName }}" },
+            { "key": "Email|email", "emailValue": "={{ $json.email }}" },
+            { "key": "Phone|phone_number", "phoneValue": "={{ $json.phone }}" },
+            { "key": "Property Address|rich_text", "textContent": "={{ $json.unit }}" },
+            { "key": "Emergency Contact Name|rich_text", "textContent": "={{ $json.emergencyContactName }}" },
+            { "key": "Emergency Contact Number|phone_number", "phoneValue": "={{ $json.emergencyContactPhone }}" },
+            { "key": "Access Code|rich_text", "textContent": "={{ $json.accessCode }}" },
+            { "key": "Status|select" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "r4-notion-create",
+      "name": "Notion — Create Tenant Record",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [1200, 528],
+      "credentials": { "notionApi": { "id": "Wv8NuVMH0qILLb5C", "name": "Property-Management-Notion" } }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Code — R1: Validate Token').first().json.fullName }}",
+        "driveId": { "__rl": true, "mode": "list", "value": "My Drive" },
+        "folderId": { "__rl": true, "value": "1mM5TF8N9K22tA4KxUKgcmeeX6swS21rd", "mode": "id" },
+        "options": {}
+      },
+      "id": "r5-drive-parent",
+      "name": "Drive — Create Parent Folder",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1440, 528],
+      "credentials": { "googleDriveOAuth2Api": { "id": "kniUtolRWgIJIUdI", "name": "Property-Management-Google-Drive" } }
+    },
+    {
+      "parameters": { "resource": "folder", "name": "01 - Identification", "driveId": { "__rl": true, "mode": "list", "value": "My Drive" }, "folderId": { "__rl": true, "value": "={{ $('Drive — Create Parent Folder').first().json.id }}", "mode": "id" }, "options": {} },
+      "id": "r6-drive-01", "name": "Drive — Create 01 Identification", "type": "n8n-nodes-base.googleDrive", "typeVersion": 3, "position": [1680, 528],
+      "credentials": { "googleDriveOAuth2Api": { "id": "kniUtolRWgIJIUdI", "name": "Property-Management-Google-Drive" } }
+    },
+    {
+      "parameters": { "resource": "folder", "name": "02 - Lease & Contracts", "driveId": { "__rl": true, "mode": "list", "value": "My Drive" }, "folderId": { "__rl": true, "value": "={{ $('Drive — Create Parent Folder').first().json.id }}", "mode": "id" }, "options": {} },
+      "id": "r7-drive-02", "name": "Drive — Create 02 Lease Contracts", "type": "n8n-nodes-base.googleDrive", "typeVersion": 3, "position": [1920, 528],
+      "credentials": { "googleDriveOAuth2Api": { "id": "kniUtolRWgIJIUdI", "name": "Property-Management-Google-Drive" } }
+    },
+    {
+      "parameters": { "resource": "folder", "name": "03 - Payments & Receipts", "driveId": { "__rl": true, "mode": "list", "value": "My Drive" }, "folderId": { "__rl": true, "value": "={{ $('Drive — Create Parent Folder').first().json.id }}", "mode": "id" }, "options": {} },
+      "id": "r8-drive-03", "name": "Drive — Create 03 Payments Receipts", "type": "n8n-nodes-base.googleDrive", "typeVersion": 3, "position": [2160, 528],
+      "credentials": { "googleDriveOAuth2Api": { "id": "kniUtolRWgIJIUdI", "name": "Property-Management-Google-Drive" } }
+    },
+    {
+      "parameters": { "resource": "folder", "name": "04 - Maintenance Records", "driveId": { "__rl": true, "mode": "list", "value": "My Drive" }, "folderId": { "__rl": true, "value": "={{ $('Drive — Create Parent Folder').first().json.id }}", "mode": "id" }, "options": {} },
+      "id": "r9-drive-04", "name": "Drive — Create 04 Maintenance Records", "type": "n8n-nodes-base.googleDrive", "typeVersion": 3, "position": [2400, 528],
+      "credentials": { "googleDriveOAuth2Api": { "id": "kniUtolRWgIJIUdI", "name": "Property-Management-Google-Drive" } }
+    },
+    {
+      "parameters": { "resource": "folder", "name": "05 - Move In / Move Out", "driveId": { "__rl": true, "mode": "list", "value": "My Drive" }, "folderId": { "__rl": true, "value": "={{ $('Drive — Create Parent Folder').first().json.id }}", "mode": "id" }, "options": {} },
+      "id": "r10-drive-05", "name": "Drive — Create 05 Move In Out", "type": "n8n-nodes-base.googleDrive", "typeVersion": 3, "position": [2640, 528],
+      "credentials": { "googleDriveOAuth2Api": { "id": "kniUtolRWgIJIUdI", "name": "Property-Management-Google-Drive" } }
+    },
+    {
+      "parameters": { "resource": "folder", "name": "06 - Notices & Correspondence", "driveId": { "__rl": true, "mode": "list", "value": "My Drive" }, "folderId": { "__rl": true, "value": "={{ $('Drive — Create Parent Folder').first().json.id }}", "mode": "id" }, "options": {} },
+      "id": "r11-drive-06", "name": "Drive — Create 06 Notices", "type": "n8n-nodes-base.googleDrive", "typeVersion": 3, "position": [2880, 528],
+      "credentials": { "googleDriveOAuth2Api": { "id": "kniUtolRWgIJIUdI", "name": "Property-Management-Google-Drive" } }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage", "operation": "update",
+        "pageId": { "__rl": true, "value": "={{ $('Notion — Create Tenant Record').first().json.id }}", "mode": "id" },
+        "propertiesUi": { "propertyValues": [{ "key": "Drive Folder Link|url", "urlValue": "={{ 'https://drive.google.com/drive/folders/' + $('Drive — Create Parent Folder').first().json.id }}" }] },
+        "options": {}
+      },
+      "id": "r12-notion-update", "name": "Notion — Update Drive Folder URL", "type": "n8n-nodes-base.notion", "typeVersion": 2.2, "position": [3120, 528],
+      "credentials": { "notionApi": { "id": "Wv8NuVMH0qILLb5C", "name": "Property-Management-Notion" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "const d=$input.first().json;const np=$('Notion — Create Tenant Record').first().json;const dp=$('Drive — Create Parent Folder').first().json;const tenantFolderUrl='https://drive.google.com/drive/folders/'+dp.id;const notionPageUrl='https://www.notion.so/'+np.id.replace(/-/g,'');return[{json:{...d,tenantFolderUrl,notionPageUrl,notionId:np.id}}];"
+      },
+      "id": "r13-build-send", "name": "Code — Build Send Data", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [3360, 528]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Notion — Create Tenant Record').item.json.property_email }}",
+        "subject": "Welcome to the Tenant Portal — Your Access Code Inside",
+        "message": "=<p>Hi {{ $('Notion — Create Tenant Record').item.json.name }},</p><p>Your registration has been verified and approved. Here are your portal details:</p><p><strong>ACCESS CODE: {{ $('Notion — Create Tenant Record').item.json.property_access_code }}</strong></p><p><strong>DOCUMENTS FOLDER:</strong> <a href=\"{{ $json.tenantFolderUrl }}\">{{ $json.tenantFolderUrl }}</a></p><p>If you have questions, contact your property manager.</p>",
+        "options": {}
+      },
+      "id": "r14-gmail", "name": "Gmail — Welcome Email", "type": "n8n-nodes-base.gmail", "typeVersion": 2.2, "position": [3600, 528],
+      "webhookId": "28f33658-3a3a-4d9d-b11f-991c07384fff",
+      "credentials": { "gmailOAuth2": { "id": "ciDwhyLlQ2i76XPa", "name": "Property-Management-Google-Gmail" } }
+    },
+    {
+      "parameters": {
+        "chatId": "1117462107",
+        "text": "=🏠 New Tenant (Gatekeeper v2)\nName: {{ $json.fullName }}\nEmail: {{ $json.email }}\nUnit: {{ $json.unit }}\nCode: {{ $json.accessCode }}\nFolder: {{ $json.tenantFolderUrl }}",
+        "additionalFields": {}
+      },
+      "id": "r15-telegram", "name": "Telegram — Notify Owner", "type": "n8n-nodes-base.telegram", "typeVersion": 1.2, "position": [3840, 528],
+      "webhookId": "3531a0a9-6e82-43a3-a424-55aea6c726e6",
+      "credentials": { "telegramApi": { "id": "vSAFKbYJd5bTpRTi", "name": "Property-Management-Telegram-account" } }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, tenantFolderUrl: $json.tenantFolderUrl, email: $json.email }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "id": "r16-resp-success", "name": "Respond — Register: Success", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [4080, 528]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage", "operation": "getAll",
+        "databaseId": { "__rl": true, "value": "719fe5aaf2f6465db75c1749dce3ab31", "mode": "id" },
+        "limit": 1, "filterType": "json",
+        "filterJson": "={{ JSON.stringify($json.notionQuery.filter) }}",
+        "options": {}
+      },
+      "id": "v2-notion-query", "name": "Notion — Uniqueness Check", "type": "n8n-nodes-base.notion", "typeVersion": 2.2, "position": [960, 160],
+      "alwaysOutputData": true,
+      "credentials": { "notionApi": { "id": "Wv8NuVMH0qILLb5C", "name": "Property-Management-Notion" } }
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "Switch — Route by Mode", "type": "main", "index": 0 }]] },
+    "Switch — Route by Mode": { "main": [[{ "node": "Code — V1: Input Validate", "type": "main", "index": 0 }], [{ "node": "Code — R1: Validate Token", "type": "main", "index": 0 }]] },
+    "Code — V1: Input Validate": { "main": [[{ "node": "Notion — Uniqueness Check", "type": "main", "index": 0 }]] },
+    "Notion — Uniqueness Check": { "main": [[{ "node": "Code — V2: Process Query Result", "type": "main", "index": 0 }]] },
+    "Code — V2: Process Query Result": { "main": [[{ "node": "IF — Duplicate?", "type": "main", "index": 0 }]] },
+    "IF — Duplicate?": { "main": [[{ "node": "Code — Log: Duplicate", "type": "main", "index": 0 }], [{ "node": "Code — V3: Build AI Request", "type": "main", "index": 0 }]] },
+    "Code — Log: Duplicate": { "main": [[{ "node": "Respond — Verify: Duplicate", "type": "main", "index": 0 }]] },
+    "Code — V3: Build AI Request": { "main": [[{ "node": "HTTP Request — OpenRouter", "type": "main", "index": 0 }]] },
+    "HTTP Request — OpenRouter": { "main": [[{ "node": "Code — V4: Parse AI Response", "type": "main", "index": 0 }]] },
+    "Code — V4: Parse AI Response": { "main": [[{ "node": "IF — AI: Approved?", "type": "main", "index": 0 }]] },
+    "IF — AI: Approved?": { "main": [[{ "node": "Code — V5: Generate Token", "type": "main", "index": 0 }], [{ "node": "Code — Log: Rejected", "type": "main", "index": 0 }]] },
+    "Code — V5: Generate Token": { "main": [[{ "node": "Code — Log: Approved", "type": "main", "index": 0 }]] },
+    "Code — Log: Approved": { "main": [[{ "node": "Respond — Verify: Approved", "type": "main", "index": 0 }]] },
+    "Code — Log: Rejected": { "main": [[{ "node": "Respond — Verify: Rejected", "type": "main", "index": 0 }]] },
+    "Code — R1: Validate Token": { "main": [[{ "node": "IF — Token Valid?", "type": "main", "index": 0 }]] },
+    "IF — Token Valid?": { "main": [[{ "node": "Notion — Create Tenant Record", "type": "main", "index": 0 }], [{ "node": "Respond — Token Invalid", "type": "main", "index": 0 }]] },
+    "Notion — Create Tenant Record": { "main": [[{ "node": "Drive — Create Parent Folder", "type": "main", "index": 0 }]] },
+    "Drive — Create Parent Folder": { "main": [[{ "node": "Drive — Create 01 Identification", "type": "main", "index": 0 }]] },
+    "Drive — Create 01 Identification": { "main": [[{ "node": "Drive — Create 02 Lease Contracts", "type": "main", "index": 0 }]] },
+    "Drive — Create 02 Lease Contracts": { "main": [[{ "node": "Drive — Create 03 Payments Receipts", "type": "main", "index": 0 }]] },
+    "Drive — Create 03 Payments Receipts": { "main": [[{ "node": "Drive — Create 04 Maintenance Records", "type": "main", "index": 0 }]] },
+    "Drive — Create 04 Maintenance Records": { "main": [[{ "node": "Drive — Create 05 Move In Out", "type": "main", "index": 0 }]] },
+    "Drive — Create 05 Move In Out": { "main": [[{ "node": "Drive — Create 06 Notices", "type": "main", "index": 0 }]] },
+    "Drive — Create 06 Notices": { "main": [[{ "node": "Notion — Update Drive Folder URL", "type": "main", "index": 0 }]] },
+    "Notion — Update Drive Folder URL": { "main": [[{ "node": "Code — Build Send Data", "type": "main", "index": 0 }]] },
+    "Code — Build Send Data": { "main": [[{ "node": "Gmail — Welcome Email", "type": "main", "index": 0 }]] },
+    "Gmail — Welcome Email": { "main": [[{ "node": "Telegram — Notify Owner", "type": "main", "index": 0 }]] },
+    "Telegram — Notify Owner": { "main": [[{ "node": "Respond — Register: Success", "type": "main", "index": 0 }]] }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Manila",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {}
+}
