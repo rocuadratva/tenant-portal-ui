@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tenant Portal — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="login-split">
+
+    <!-- ============================
+         LEFT — Brand Panel
+         ============================ -->
+    <div class="login-split__brand">
+
+      <!-- Logo -->
+      <div class="brand-panel__logo">
+        <div class="brand-panel__logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <span class="brand-panel__logo-text">Tenant<span>Portal</span></span>
+      </div>
+
+      <!-- Hero copy + features -->
+      <div class="brand-panel__hero">
+        <h1 class="brand-panel__headline">Your home,<br>managed smarter.</h1>
+        <p class="brand-panel__tagline">
+          A dedicated portal for tenants to manage their stay — from maintenance requests to lease documents, all in one place.
+        </p>
+
+        <div class="brand-panel__features">
+          <div class="brand-feature">
+            <div class="brand-feature__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+              </svg>
+            </div>
+            <div class="brand-feature__text">
+              <strong>Submit Maintenance Requests</strong>
+              <span>Report issues and track repair status in real time.</span>
+            </div>
+          </div>
+
+          <div class="brand-feature">
+            <div class="brand-feature__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <div class="brand-feature__text">
+              <strong>View Lease &amp; Documents</strong>
+              <span>Access your contract, receipts, and important files anytime.</span>
+            </div>
+          </div>
+
+          <div class="brand-feature">
+            <div class="brand-feature__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="brand-feature__text">
+              <strong>Message Your Property Manager</strong>
+              <span>Send concerns or questions directly through the portal.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="brand-panel__footer">
+        &copy; 2025 TenantPortal. All rights reserved.
+      </div>
+
+    </div>
+
+    <!-- ============================
+         RIGHT — Login Form
+         ============================ -->
+    <div class="login-split__form">
+      <div class="login-card">
+
+        <!-- Mobile-only brand mark -->
+        <div class="login-mobile-brand">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-accent)">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          TenantPortal
+        </div>
+
+        <!-- Card header -->
+        <div class="login-card__top">
+          <div class="login-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h1 class="login-card__title">Welcome <span>back</span></h1>
+          <p class="login-card__tagline">Enter your access code to continue to your tenant portal.</p>
+        </div>
+
+        <!-- Alert area -->
+        <div id="alert-container"></div>
+
+        <!-- Form -->
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="access-code" class="label-required">Access Code</label>
+            <div class="input-wrap">
+              <span class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                </svg>
+              </span>
+              <input
+                type="text"
+                id="access-code"
+                name="accessCode"
+                placeholder="e.g. UNIT-201"
+                autocomplete="off"
+                autocapitalize="characters"
+                maxlength="20"
+                required
+              />
+            </div>
+            <span class="field-hint">Your access code was provided by your property manager.</span>
+          </div>
+
+          <div class="mt-6">
+            <button type="submit" id="submit-btn" class="btn btn--brand btn--full btn--lg">
+              Continue
+              <span class="btn__arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Demo preview -->
+        <div class="divider--label mt-8">Just browsing?</div>
+        <button type="button" id="demo-btn" class="btn btn--secondary btn--full" onclick="sessionStorage.setItem('accessCode','DEMO'); window.location.href='dashboard.html';">
+          Preview Demo
+        </button>
+
+        <!-- Divider + help -->
+        <div class="divider--label mt-6">Need help?</div>
+
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-4);">
+          <span style="color: var(--color-text-subtle); flex-shrink: 0; margin-top: 1px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </span>
+          <p style="font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.6; margin: 0;">
+            Don't have an access code? Contact your property manager to receive your unique unit code.
+          </p>
+        </div>
+
+        <!-- Register -->
+        <div class="divider--label mt-6">New tenant?</div>
+        <button type="button" id="reg-toggle-btn" class="btn btn--ghost btn--full" aria-expanded="false" aria-controls="reg-panel">
+          Register as Tenant
+          <span class="btn__arrow" id="reg-chevron" style="transition: transform 180ms ease;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </span>
+        </button>
+
+        <div id="reg-panel" hidden style="margin-top: var(--space-4);">
+          <div id="alert-reg"></div>
+
+          <div class="form-group">
+            <label for="reg-name" class="label-required">Full Name</label>
+            <input type="text" id="reg-name" name="fullName" placeholder="e.g. Juan dela Cruz" autocomplete="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-email" class="label-required">Email Address</label>
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </span>
+              <input type="email" id="reg-email" name="email" placeholder="you@email.com" autocomplete="email" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-phone" class="label-required">Phone Number</label>
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.49A2 2 0 0 1 3.6 1.31h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9c1.27 2.19 2.82 3.74 5 5l1.27-.89a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/>
+                </svg>
+              </span>
+              <input type="tel" id="reg-phone" name="phone" placeholder="+63 9XX XXX XXXX" autocomplete="tel" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-address" class="label-required">Full Address</label>
+            <input type="text" id="reg-address" name="address" placeholder="Street, Barangay, City" autocomplete="street-address" required />
+          </div>
+
+          <div style="border-top: 1px solid var(--color-border); margin: var(--space-5) 0;"></div>
+
+          <div class="form-group">
+            <label for="reg-ec-name" class="label-required">Emergency Contact Name</label>
+            <input type="text" id="reg-ec-name" name="emergencyContactName" placeholder="Full name of your emergency contact" autocomplete="off" required />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-ec-phone" class="label-required">Emergency Contact Phone</label>
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.49A2 2 0 0 1 3.6 1.31h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9c1.27 2.19 2.82 3.74 5 5l1.27-.89a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/>
+                </svg>
+              </span>
+              <input type="tel" id="reg-ec-phone" name="emergencyContactPhone" placeholder="+63 9XX XXX XXXX" autocomplete="off" required />
+            </div>
+          </div>
+
+          <div class="mt-4" id="reg-submit-wrap">
+            <button type="button" id="reg-submit-btn" class="btn btn--brand btn--full">
+              Submit Registration
+              <span class="btn__arrow">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <!-- Success state (hidden until submission succeeds) -->
+          <div id="reg-success" hidden style="text-align:center; padding: var(--space-4) 0;">
+            <div class="icon-badge icon-badge--success" style="margin: 0 auto var(--space-3);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <p style="font-size: var(--text-sm); font-weight: var(--fw-semi); color: var(--color-text); margin-bottom: var(--space-1);">Registration submitted!</p>
+            <p id="reg-success-msg" style="font-size: var(--text-xs); color: var(--color-text-muted); margin: 0;">Your access code has been sent to your email.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.login-split -->
+
+  <!-- DEV NAV TOOLBAR — remove before launch -->
+  <div style="position:fixed;bottom:0;left:0;right:0;background:#f97316;color:white;padding:8px 16px;display:flex;gap:16px;align-items:center;font-size:12px;font-weight:600;z-index:9999;flex-wrap:wrap;">
+    <span style="opacity:0.7;text-transform:uppercase;letter-spacing:0.08em;flex-shrink:0;">DEV NAV</span>
+    <a href="index.html" style="color:white;text-decoration:none;">Home</a>
+    <a href="onboarding.html" style="color:white;text-decoration:none;">Register</a>
+    <a href="dashboard.html" style="color:white;text-decoration:none;">Dashboard</a>
+    <a href="documents.html" style="color:white;text-decoration:none;">Documents</a>
+    <a href="maintenance.html" style="color:white;text-decoration:none;">Maintenance</a>
+    <a href="contact.html" style="color:white;text-decoration:none;">Contact</a>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (getAccessCode()) {
+      window.location.href = 'dashboard.html';
+    }
+
+    const form      = document.getElementById('login-form');
+    const input     = document.getElementById('access-code');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert('alert-container');
+
+      const code = input.value.trim().toUpperCase();
+
+      if (!code) {
+        input.classList.add('is-error');
+        showAlert('alert-container', 'Please enter your access code.', 'error');
+        input.focus();
+        return;
+      }
+
+      input.classList.remove('is-error');
+      setLoading(submitBtn, true);
+
+      try {
+        const result = await apiPost(WEBHOOKS.verifyCode, { accessCode: code });
+
+        if (result && result.valid) {
+          setAccessCode(code);
+          if (result.tenant) setTenantData(result.tenant);
+          const isOnboarded = result.tenant && result.tenant.onboarded;
+          window.location.href = isOnboarded ? 'dashboard.html' : 'onboarding.html';
+        } else {
+          showAlert('alert-container', 'Invalid access code. Please check and try again.', 'error');
+          input.classList.add('is-error');
+          input.focus();
+        }
+      } catch (err) {
+        showAlert('alert-container', 'Unable to verify code. Please try again shortly.', 'error');
+      } finally {
+        setLoading(submitBtn, false);
+      }
+    });
+
+    input.addEventListener('input', () => {
+      input.classList.remove('is-error');
+      clearAlert('alert-container');
+    });
+
+    // ── Registration panel toggle ──────────────────────────────
+    const regToggle  = document.getElementById('reg-toggle-btn');
+    const regPanel   = document.getElementById('reg-panel');
+    const regChevron = document.getElementById('reg-chevron');
+
+    regToggle.addEventListener('click', () => {
+      const isOpen = !regPanel.hidden;
+      regPanel.hidden = isOpen;
+      regToggle.setAttribute('aria-expanded', String(!isOpen));
+      regChevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+      if (!isOpen) regPanel.querySelector('input').focus();
+    });
+
+    // ── Registration form submission ───────────────────────────
+    const REG_PHONE_RE = /^\+?[\d\s\-()\s]{7,15}$/;
+    const regSubmitBtn = document.getElementById('reg-submit-btn');
+
+    regSubmitBtn.addEventListener('click', async () => {
+      const fields = ['reg-name', 'reg-email', 'reg-phone', 'reg-address', 'reg-ec-name', 'reg-ec-phone'];
+      let valid = true;
+
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('is-error');
+        if (!el.value.trim()) { el.classList.add('is-error'); valid = false; }
+      });
+
+      if (!valid) {
+        showAlert('alert-reg', 'Please fill in all required fields.');
+        return;
+      }
+
+      const emailEl = document.getElementById('reg-email');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
+        emailEl.classList.add('is-error');
+        showAlert('alert-reg', 'Please enter a valid email address.');
+        return;
+      }
+
+      const phoneEl = document.getElementById('reg-phone');
+      if (!REG_PHONE_RE.test(phoneEl.value.trim())) {
+        phoneEl.classList.add('is-error');
+        showAlert('alert-reg', 'Please enter a valid phone number.');
+        return;
+      }
+
+      const ecPhoneEl = document.getElementById('reg-ec-phone');
+      if (!REG_PHONE_RE.test(ecPhoneEl.value.trim())) {
+        ecPhoneEl.classList.add('is-error');
+        showAlert('alert-reg', 'Please enter a valid emergency contact phone number.');
+        return;
+      }
+
+      clearAlert('alert-reg');
+      setLoading(regSubmitBtn, true);
+
+      try {
+        const result = await apiPost(WEBHOOKS.newTenantRegistration, {
+          fullName:              document.getElementById('reg-name').value.trim(),
+          email:                 document.getElementById('reg-email').value.trim(),
+          phone:                 document.getElementById('reg-phone').value.trim(),
+          address:               document.getElementById('reg-address').value.trim(),
+          emergencyContactName:  document.getElementById('reg-ec-name').value.trim(),
+          emergencyContactPhone: document.getElementById('reg-ec-phone').value.trim(),
+        });
+
+        if (result && result.success) {
+          document.getElementById('reg-submit-wrap').hidden = true;
+          if (result.email) {
+            document.getElementById('reg-success-msg').textContent =
+              'Your access code has been sent to ' + escapeHtml(result.email) + '.';
+          }
+          document.getElementById('reg-success').hidden = false;
+        } else {
+          throw new Error(result && result.message ? result.message : DEFAULT_ERROR_MSG);
+        }
+      } catch (err) {
+        showAlert('alert-reg', err.message || DEFAULT_ERROR_MSG);
+        setLoading(regSubmitBtn, false);
+      }
+    });
+  </script>
+</body>
+</html>
